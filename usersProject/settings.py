@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 import environ
+import sys
 
 env = environ.Env()
 
@@ -84,9 +85,24 @@ WSGI_APPLICATION = "usersProject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': env.db()
-}
+is_test = "manage.py" in sys.argv and "test" in sys.argv
+
+if is_test:
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+        }
+    }
+else:
+    DATABASES = {
+    'default': 
+        env.db()
+    }
+
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
