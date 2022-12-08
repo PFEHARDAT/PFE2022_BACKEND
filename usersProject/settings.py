@@ -27,8 +27,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 DEBUG = env('DEBUG')
 
 # Raises Django's ImproperlyConfigured
-# exception if SECRET_KEY not in os.environ
-SECRET_KEY = env('SECRET_KEY')
+# exception if KEY_SEC not in os.environ
+SECRET_KEY = env('KEY_SEC')
 
 
 CORS_ORIGIN_ALLOW_ALL = True
