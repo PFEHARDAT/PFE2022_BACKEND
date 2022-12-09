@@ -29,7 +29,7 @@ DEBUG = env('DEBUG')
 
 # Raises Django's ImproperlyConfigured
 # exception if SECRET_KEY not in os.environ
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('KEY_SEC')
 
 
 CORS_ORIGIN_ALLOW_ALL = True

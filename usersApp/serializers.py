@@ -5,12 +5,12 @@ from rest_framework.validators import ValidationError
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(max_length=100)
+    username = serializers.CharField(max_length=100)
     email = serializers.EmailField(max_length=100)
     password = serializers.CharField(max_length=100)
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'password')
+        fields = ('id', 'username', 'email', 'password')
     
     def validate(self, attrs):
         email_exist = User.objects.filter(email=attrs["email"]).exists()
