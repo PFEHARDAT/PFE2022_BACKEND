@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework import generics, status
 from .serializers import SignUpSerializer
 from .tokens import create_jwt_pair_for_user
+from .models import User
 
 
 # Create your views here.
@@ -52,16 +53,16 @@ class LoginView(APIView):
 class UserListAPIView(APIView):
     def get(self, request):
         users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
+        serializer = SignUpSerializer(users, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = SignUpSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
 class UserDetailAPIView(APIView):
     def get_object(self, pk):
         try:
@@ -71,12 +72,12 @@ class UserDetailAPIView(APIView):
 
     def get(self, request, pk):
         user = self.get_object(pk)
-        serializer = UserSerializer(user)
+        serializer = SignUpSerializer(user)
         return Response(serializer.data)
 
     def put(self, request, pk):
         user = self.get_object(pk)
-        serializer = UserSerializer(user, data=request.data)
+        serializer = SignUpSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
