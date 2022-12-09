@@ -10,4 +10,4 @@ class User(models.Model):
     following_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.name
+        return self.email
