@@ -8,3 +8,6 @@ class Post(models.Model):
     like_count = models.BigIntegerField()
     comment_count = models.BigIntegerField() 
 
+    def __str__(self):
+        return self.content
+
