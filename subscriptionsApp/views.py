@@ -14,7 +14,6 @@ class AllSubscriptionView(APIView):
     permission_classes = []
     def get_all_subscription(self, user):
         subscriptions = Subscription.objects.all().filter(user=user)
-
         return subscriptions
 
 class SubscribeToUserView(APIView):
