@@ -18,6 +18,7 @@ from django.urls import path, include
 from usersApp import urls as userUrls
 from subscriptionsApp import urls as subscriptionUrls
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
