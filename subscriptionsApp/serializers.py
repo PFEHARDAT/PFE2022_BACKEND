@@ -1,24 +1,15 @@
-from rest_framework import serializers
 from .models import Subscription
 from .models import User
+from rest_framework import serializers
+from usersApp.serializers import SignUpSerializer
+
 from rest_framework.validators import ValidationError
-
-class AllSubscriptionSerializer(serializers.ModelSerializer):
-    user = serializers.ForeignKey(User)
-    subscription = serializers.ForeignKey(User)
-    class Meta:
-        model = Subscription
-        fields= ('id', 'user', 'subscription')
     
-    def get_all_subscription(self, attrs):
-        subscriptions = Subscription.objects.all().filter(user=attrs["user"])
-
-        return subscriptions
+   
 
 class SubscribeToUserSerializer(serializers.ModelSerializer):
-    user = serializers.ForeignKey(User)
-    subscription = serializers.ForeignKey(User)
-
+    user=SignUpSerializer(read_only=True, many=True)
+    subscription=SignUpSerializer(read_only=True, many=True)
     class Meta:
         model = Subscription
         fields= ('id', 'user', 'subscription')
@@ -30,8 +21,8 @@ class SubscribeToUserSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        subscritpion = super().create(validated_data)
-        subscritpion.save()
-        return subscritpion
+        sub = super().create(validated_data)
+        sub.save()
+        return sub
 
 

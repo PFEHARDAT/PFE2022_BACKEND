@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "usersApp",
     "corsheaders", 
+    "subscriptionsApp",
 ]
 
 AUTH_USER_MODEL = "usersApp.User"

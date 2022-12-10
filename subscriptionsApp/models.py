@@ -5,6 +5,6 @@ from usersApp.models import User
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey(User)
-    subscription = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='User_content')
+    subscription = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='Subscription_content')
 
