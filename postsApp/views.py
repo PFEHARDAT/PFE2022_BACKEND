@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Post
 from .serializers import PostSerializer
+import datetime
 # Create your views here.
 
 class PostListAPIView(APIView):
@@ -23,9 +24,9 @@ class PostListAPIView(APIView):
         Create the post with given post data
         '''
         data = {
-            'user': request.data.get('user_id'), 
+            'user': request.data.get('user'), 
             'content': request.data.get('content'), 
-            'publication_date': request.data.get('publication_date'),
+            'publication_date': datetime.datetime.now(),
             'like_count' : 0,
             'comment_count' : 0,
             'retweet_count' : 0
