@@ -11,23 +11,26 @@ from .models import Subscription
 # Create your views here.
 
 class AllSubscriptionView(APIView):
-    permission_classes = []
-    def get_all_subscription(self, user):
+    def get(self, request:Request, user):
         subscriptions = Subscription.objects.all().filter(user=user)
-        return subscriptions
+        serializer = SubscribeToUserSerializer(subscriptions, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class SubscribeToUserView(APIView):
-    permission_classes = []
     serializer_class = SubscribeToUserSerializer
-    def post(self, request:Request, user):
+    def post(self, request:Request):
+        user = request.data.get("user")
+        subscription = request.data.get("subscription")
         data = request.data
         serializer = self.serializer_class(data=data)
+        
         if serializer.is_valid():
             serializer.save()
             response = {"message": "Subbscription Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
-        
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        subscription_exist = Subscription.objects.filter(user=user, subscription=subscription)
+        subscription_exist.delete()
+        return Response(data='DELETED', status=status.HTTP_200_OK)
 
 
 
