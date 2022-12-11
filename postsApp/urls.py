@@ -8,5 +8,6 @@ from .views import (
 
 urlpatterns =[
     path('api', PostListAPIView.as_view()),
-    path('api/<int:post_id>', PostDetailsAPIView.as_view())
+    path('api/<int:post_id>', PostDetailsAPIView.as_view()),
+    path('api/user/<int:user_id>', PostByUserAPIView.as_view()),
 ]
