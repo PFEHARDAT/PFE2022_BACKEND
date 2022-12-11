@@ -12,6 +12,7 @@ from .models import User
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = []
+    
     def post(self, request: Request):
         data = request.data
         serializer = self.serializer_class(data=data)

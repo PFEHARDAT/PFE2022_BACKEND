@@ -23,7 +23,6 @@ class SubscribeToUserView(APIView):
         subscription = request.data.get("subscription")
         data = request.data
         serializer = self.serializer_class(data=data)
-        
         if serializer.is_valid():
             serializer.save()
             response = {"message": "Subbscription Created Successfully", "data": serializer.data}
