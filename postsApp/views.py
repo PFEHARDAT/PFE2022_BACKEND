@@ -9,7 +9,7 @@ from .serializers import PostSerializer
 class PostListAPIView(APIView):
 
     #List all Post
-    def get(self):
+    def get(self,request):
         '''
         List all the post items
         '''
