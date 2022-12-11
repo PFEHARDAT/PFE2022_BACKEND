@@ -39,3 +39,27 @@ class PostListAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PostDetailsAPIView(APIView):
+    def get_object(self, post_id):
+        try:
+            return Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return None
+
+    def get(self, request, post_id):
+        post = self.get_object(post_id)
+
+        if not post:
+            return Response(
+                {"res": "Object with post id does not exists"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = PostSerializer(post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, post_id):
+        post = self.get_object(post_id)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
