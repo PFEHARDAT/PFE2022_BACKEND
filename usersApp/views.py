@@ -75,3 +75,23 @@ class UserDetailAPIView(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UpdateFollowersCountView(APIView):
+    def post(self, request, pk, increment):
+        user = User.objects.get(pk=pk)
+        if (increment):
+            user.followers_count += 1
+        else:
+            user.followers_count -= 1
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+class UpdateFollowingCountView(APIView):
+    def post(self, request, pk, increment):
+        user = User.objects.get(pk=pk)
+        if (increment):
+            user.following_count += 1
+        else:
+            user.following_count -= 1
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+        
