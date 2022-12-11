@@ -29,7 +29,7 @@ class LikedPostView(APIView):
             like_list.append(like.post.id)
         return Response({'like_list': like_list}, status=status.HTTP_200_OK)
 
-class LikeOnPostView(APIView):
+class LikesOnPostView(APIView):
     def get(self, request, post_id):
         post = Post.objects.get(id=post_id)
         likes = Like.objects.filter(post=post)
