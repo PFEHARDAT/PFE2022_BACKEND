@@ -5,6 +5,7 @@ from posts.models import Post
 from rest_framework import status
 from users.models import User
 import json
+from .usersApp.views import UpdateFollowersCountView, UpdateFollowingCountView
 
 # Create your views here.
 class LikesView(APIView):
@@ -36,4 +37,6 @@ class LikesOnPostView(APIView):
         like_list = []
         for like in likes:
             like_list.append(like.user.id)
+        view = UpdateFollowingCountView().as_view()
+        view(request, user_id=post.user.id)
         return Response({'like_list': like_list}, status=status.HTTP_200_OK)
