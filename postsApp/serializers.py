@@ -11,4 +11,6 @@ class PostSerializer(serializers.ModelSerializer):
             "publication_date",
             "like_count", 
             "comment_count", 
-            "retweet_count"]
+            "retweet_count",
+            "is_comment",
+            "response_to_post"]

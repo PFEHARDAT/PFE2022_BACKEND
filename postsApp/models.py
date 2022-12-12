@@ -9,7 +9,8 @@ class Post(models.Model):
     like_count = models.BigIntegerField()
     comment_count = models.BigIntegerField()
     retweet_count = models.BigIntegerField()
-     
+    is_comment = models.BooleanField(default=False)
+    response_to_post = models.ForeignKey('self', on_delete = models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.content
