@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "followersApp",
     "corsheaders", 
     "subscriptionsApp",
+    "retweetsApp"
 ]
 
 AUTH_USER_MODEL = "usersApp.User"
