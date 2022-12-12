@@ -6,8 +6,8 @@ from usersApp.models import User
 
 
 class Follower(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='User_content')
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Follower_content')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower_user_content')
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower_content')
     class Meta:
         db_table = 'followersApp_follower'
         unique_together = ('user', 'follower')
