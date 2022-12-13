@@ -12,6 +12,7 @@ from .models import User
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = []
+    
     def post(self, request: Request):
         data = request.data
         serializer = self.serializer_class(data=data)
@@ -75,3 +76,10 @@ class UserDetailAPIView(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserSearchAPIView(APIView):
+    def get(self, request:Request, username):
+        users = User.objects.filter(username__icontains=username)
+        serializer = SignUpSerializer(users, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK) 
+    
