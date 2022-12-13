@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "followersApp",
     "subscriptionsApp",
     "retweetsApp",
-    "postsApp"
     "postsApp",
     "likesApp",
 ]
