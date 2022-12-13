@@ -96,3 +96,9 @@ class UpdateFollowingCountView(APIView):
         user.save()
         return Response(status=status.HTTP_200_OK)
         
+class UserSearchAPIView(APIView):
+    def get(self, request:Request, username):
+        users = User.objects.filter(username__icontains=username)
+        serializer = SignUpSerializer(users, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK) 
+    
