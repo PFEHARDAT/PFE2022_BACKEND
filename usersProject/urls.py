@@ -18,11 +18,13 @@ from django.urls import path, include
 from usersApp import urls as userUrls
 from followersApp import urls as followerUrls
 from subscriptionsApp import urls as subscriptionUrls
+from postsApp import urls as postsUrls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('users/', include(userUrls)),
     path('followers/', include(followerUrls)),
-    path('subscriptions/', include(subscriptionUrls))
+    path('subscriptions/', include(subscriptionUrls)),
+    path('posts/', include(postsUrls))
 ]

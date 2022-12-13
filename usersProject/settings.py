@@ -53,9 +53,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "usersApp",
+    "corsheaders",
     "followersApp",
-    "corsheaders", 
     "subscriptionsApp",
+    "postsApp"
 ]
 
 AUTH_USER_MODEL = "usersApp.User"
