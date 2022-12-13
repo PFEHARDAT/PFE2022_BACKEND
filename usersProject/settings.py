@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "followersApp",
     "subscriptionsApp",
+    "retweetsApp",
+    "postsApp"
     "postsApp",
     "likesApp",
 ]
