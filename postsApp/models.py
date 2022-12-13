@@ -11,6 +11,7 @@ class Post(models.Model):
     retweet_count = models.BigIntegerField(default=0)
     is_comment = models.BooleanField(default=False)
     response_to_post = models.ForeignKey('self', on_delete = models.CASCADE, blank=True, null=True)
+    author_pseudo = models.CharField(max_length= 100,blank=True, null=True)
 
     def __str__(self):
         return self.content
