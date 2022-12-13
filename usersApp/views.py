@@ -80,7 +80,7 @@ class UserDetailAPIView(APIView):
 class UpdateFollowersCountView(APIView):
     def post(self, request, pk, increment):
         user = User.objects.get(pk=pk)
-        if (increment):
+        if (increment > 0):
             user.followers_count += 1
         else:
             user.followers_count -= 1
@@ -89,7 +89,7 @@ class UpdateFollowersCountView(APIView):
 class UpdateFollowingCountView(APIView):
     def post(self, request, pk, increment):
         user = User.objects.get(pk=pk)
-        if (increment):
+        if (increment > 0):
             user.following_count += 1
         else:
             user.following_count -= 1

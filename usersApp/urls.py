@@ -16,10 +16,10 @@ from . import views
 
 
 urlpatterns = [
-    path('/', UserListAPIView.as_view()),
-    path('/<int:pk>', UserDetailAPIView.as_view()),
-    path('followers/<int:pk>&<bool:increment>', UpdateFollowersCountView.as_view()),
-    path('following/<int:pk>&<bool:increment>', UpdateFollowingCountView.as_view()),
+    path('', UserListAPIView.as_view()),
+    path('<int:pk>', UserDetailAPIView.as_view()),
+    path('followers/<int:pk>&<int:increment>', UpdateFollowersCountView.as_view()),
+    path('following/<int:pk>&<int:increment>', UpdateFollowingCountView.as_view()),
     path("signup/", views.SignUpView.as_view(), name="signup"),
     path("login/", views.LoginView.as_view(), name="login"),
     path("jwt/create/", TokenObtainPairView.as_view(), name="jwt_create"),

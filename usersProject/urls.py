@@ -19,6 +19,7 @@ from usersApp import urls as userUrls
 from followersApp import urls as followerUrls
 from subscriptionsApp import urls as subscriptionUrls
 from postsApp import urls as postsUrls
+from likesApp import urls as likesUrls
 
 
 urlpatterns = [
@@ -27,5 +28,6 @@ urlpatterns = [
     path('users/', include(userUrls)),
     path('followers/', include(followerUrls)),
     path('subscriptions/', include(subscriptionUrls)),
-    path('posts/', include(postsUrls))
+    path('posts/', include(postsUrls)),
+    path('likes/', include(likesUrls))
 ]

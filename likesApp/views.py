@@ -1,21 +1,23 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Like
-from posts.models import Post
 from rest_framework import status
-from users.models import User
-import json
-from .usersApp.views import UpdateFollowersCountView, UpdateFollowingCountView
+from usersApp.models import User
+from postsApp.models import Post
 
 # Create your views here.
 class LikesView(APIView):
     def post(self, request):
-        data = json.loads(request.body)
+        data = {
+            'user_id': request.data.get('user_id'),
+            'post_id': request.data.get('post_id')
+        }
         user = User.objects.get(id=data['user_id'])
         post = Post.objects.get(id=data['post_id'])
         like = Like.objects.filter(user=user, post=post)
         if like.exists():
             like.delete()
+            
             return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
         else:
             Like.objects.create(user=user, post=post)
@@ -37,6 +39,4 @@ class LikesOnPostView(APIView):
         like_list = []
         for like in likes:
             like_list.append(like.user.id)
-        view = UpdateFollowingCountView().as_view()
-        view(request, user_id=post.user.id)
         return Response({'like_list': like_list}, status=status.HTTP_200_OK)
