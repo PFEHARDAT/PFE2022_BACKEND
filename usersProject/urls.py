@@ -19,6 +19,7 @@ from usersApp import urls as userUrls
 from followersApp import urls as followerUrls
 from subscriptionsApp import urls as subscriptionUrls
 from retweetsApp import urls as retweetUrls
+from postsApp import urls as postsUrls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +27,6 @@ urlpatterns = [
     path('users/', include(userUrls)),
     path('followers/', include(followerUrls)),
     path('subscriptions/', include(subscriptionUrls)),
-    path('retweets/', include(retweetUrls))
+    path('retweets/', include(retweetUrls)),
+    path('posts/', include(postsUrls))
 ]
