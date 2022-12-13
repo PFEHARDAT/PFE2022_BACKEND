@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     "subscriptionsApp",
     "retweetsApp",
     "postsApp"
+    "postsApp",
+    "likesApp",
 ]
 
 AUTH_USER_MODEL = "usersApp.User"
