@@ -3,11 +3,13 @@ from django.urls import path
 from .views import (
     PostListAPIView,
     PostDetailsAPIView,
-    PostByUserAPIView
+    PostByUserAPIView,
+    CommentsListAPIView
 )
 
 urlpatterns =[
-    path('api', PostListAPIView.as_view()),
-    path('api/<int:post_id>', PostDetailsAPIView.as_view()),
-    path('api/user/<int:user_id>', PostByUserAPIView.as_view()),
+    path('', PostListAPIView.as_view()),
+    path('<int:post_id>', PostDetailsAPIView.as_view()),
+    path('user/<int:user_id>', PostByUserAPIView.as_view()),
+    path('comments/<int:post_id>', CommentsListAPIView.as_view())
 ]
