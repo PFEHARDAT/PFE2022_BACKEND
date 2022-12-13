@@ -13,4 +13,6 @@ class PostSerializer(serializers.ModelSerializer):
             "comment_count", 
             "retweet_count",
             "is_comment",
-            "response_to_post"]
+            "response_to_post",
+            "author_pseudo"
+            ]

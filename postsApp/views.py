@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Post
+from usersApp.models import User
 from .serializers import PostSerializer
 import datetime
 # Create your views here.
@@ -23,10 +24,12 @@ class PostListAPIView(APIView):
         '''
         Create the post with given post data
         '''
+        user_author = User.objects.get(pk=request.data.get('user'))
         data = {
             'user': request.data.get('user'), 
             'content': request.data.get('content'), 
-            'publication_date': datetime.datetime.now()
+            'publication_date': datetime.datetime.now(),
+            'author_pseudo' : getattr(user_author,"username")
         }
 
         serializer = PostSerializer(data=data)
@@ -90,6 +93,8 @@ class CommentsListAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        user_author = User.objects.get(pk=request.data.get('user'))
+
         '''
         Create the post (comment) with given post data
         '''
@@ -98,7 +103,8 @@ class CommentsListAPIView(APIView):
             'content': request.data.get('content'), 
             'publication_date': datetime.datetime.now(),
             'is_comment' : True,
-            'response_to_post' : post_id
+            'response_to_post' : post_id,
+            'author_pseudo' : getattr(user_author,"username")
         }
 
         serializer = PostSerializer(data=data)
