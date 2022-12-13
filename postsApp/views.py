@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Post
 from usersApp.models import User
+from subscriptionsApp.models import Subscription
 from .serializers import PostSerializer
 import datetime
 # Create your views here.
@@ -116,3 +117,21 @@ class CommentsListAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PostFromSubscriptionAPIView(APIView):
+    def get(self,request,user_id):
+        
+        subscriptions = Subscription.objects.filter(user=user_id)
+        set_sub = {s.subscription.id for s in subscriptions}
+        print("#")
+        for s in subscriptions:
+            print("----",s.subscription,"----")
+
+        print("#")
+
+        # Return all posts created by people, user (id=user_id) is following
+        # comments are excluded
+        posts = Post.objects.filter(user__in=set_sub).exclude(is_comment=True)
+        serializer = PostSerializer(posts, many=True)
+        
+        return Response(serializer.data)
