@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework import generics, status
 from .serializers import FollowerToUserSerializer
 from .models import Follower
+from usersApp.models import User
 
 
 # Create your views here.
@@ -25,8 +26,18 @@ class FollowerToUserView(APIView):
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
+            self.updateFollowerCount(user, True)
             response = {"message": "Follower Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
         follower_exist = Follower.objects.filter(user=user, follower=follower)
         follower_exist.delete()
+        self.updateFollowerCount(user, False)
         return Response(data='DELETED', status=status.HTTP_200_OK)
+    
+    def updateFollowerCount(self, user, increment):
+        user = User.objects.get(id=user)
+        if increment:
+            user.followers_count += 1
+        else:
+            user.followers_count -= 1
+        user.save()

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework import generics, status
-from .serializers import SignUpSerializer
+from .serializers import SignUpSerializer, UserSerializer
 from .models import User
 
 # Create your views here.
@@ -24,13 +24,12 @@ class SignUpView(generics.GenericAPIView):
     
 class LoginView(APIView):
     permission_classes = []
-
     def post(self, request:Request):
         email = request.data.get("email")
         password = request.data.get("password")
         user = authenticate(email=email, password=password)
         if user is not None:
-            response = {"message": "Login Successfull", "tokens": user.auth_token.key}
+            response = {"message": "Login Successfull", "tokens": user.auth_token.key, "id": user.id}
             return Response(data=response, status=status.HTTP_200_OK)
         else:
             return Response(data={"message": "Invalid email or password"})
@@ -42,7 +41,7 @@ class LoginView(APIView):
 class UserListAPIView(APIView):
     def get(self, request):
         users = User.objects.all()
-        serializer = SignUpSerializer(users, many=True)
+        serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -61,12 +60,12 @@ class UserDetailAPIView(APIView):
 
     def get(self, request, pk):
         user = self.get_object(pk)
-        serializer = SignUpSerializer(user)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
 
     def put(self, request, pk):
         user = self.get_object(pk)
-        serializer = SignUpSerializer(user, data=request.data)
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -77,9 +76,19 @@ class UserDetailAPIView(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class UpdateFollowersCountView(APIView):
+    def post(self, request, pk, increment):
+        user = User.objects.get(pk=pk)
+        if (increment > 0):
+            user.followers_count += 1
+        else:
+            user.followers_count -= 1
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+        
 class UserSearchAPIView(APIView):
     def get(self, request:Request, username):
         users = User.objects.filter(username__icontains=username)
-        serializer = SignUpSerializer(users, many=True)
+        serializer = UserSerializer(users, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK) 
     
