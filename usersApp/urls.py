@@ -2,8 +2,6 @@ from django.urls import path
 from .views import (
     UserListAPIView,
     UserDetailAPIView,
-    UpdateFollowersCountView,
-    UpdateFollowingCountView,
     )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -18,8 +16,6 @@ from . import views
 urlpatterns = [
     path('', UserListAPIView.as_view()),
     path('<int:pk>', UserDetailAPIView.as_view()),
-    path('followers/<int:pk>&<int:increment>', UpdateFollowersCountView.as_view()),
-    path('following/<int:pk>&<int:increment>', UpdateFollowingCountView.as_view()),
     path("signup/", views.SignUpView.as_view(), name="signup"),
     path("login/", views.LoginView.as_view(), name="login"),
     path("search/<str:username>", views.UserSearchAPIView.as_view(), name="search"),

@@ -17,12 +17,20 @@ class LikesView(APIView):
         like = Like.objects.filter(user=user, post=post)
         if like.exists():
             like.delete()
-            
+            self.updateCount(post, False)
             return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
         else:
             Like.objects.create(user=user, post=post)
+            self.updateCount(post, True)
             return Response({'message': 'CREATED'}, status=status.HTTP_201_CREATED)
 
+    def updateCount(self, post, increment):
+        print("hey")
+        if increment:
+            post.like_count += 1
+        else:
+            post.like_count -= 1
+        post.save()
 class LikedPostView(APIView):   
     def get(self, request, user_id):
         user = User.objects.get(id=user_id)
