@@ -25,7 +25,6 @@ class LikesView(APIView):
             return Response({'message': 'CREATED'}, status=status.HTTP_201_CREATED)
 
     def updateCount(self, post, increment):
-        print("hey")
         if increment:
             post.like_count += 1
         else:

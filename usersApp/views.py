@@ -24,7 +24,6 @@ class SignUpView(generics.GenericAPIView):
     
 class LoginView(APIView):
     permission_classes = []
-
     def post(self, request:Request):
         email = request.data.get("email")
         password = request.data.get("password")
