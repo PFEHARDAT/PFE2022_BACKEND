@@ -21,24 +21,25 @@ class SubscriptionView(APIView):
 
     def post(self, request:Request):
         user = request.data.get("user")
-        subscription = request.data.get("subscription")
         data = request.data
+        subscription = Subscription.objects.filter(user=user, subscription=request.data.get("subscription"))
         serializer = self.serializer_class(data=data)
-        if serializer.is_valid():
+        if subscription.exists():
+            print("delete")
+            subscription.delete()
+            self.updateSubscriptionsCount(user, False)
+            self.updateFollowerCount(subscription, False)
+            self.deleteFromFollower(subscription, user)
+        elif serializer.is_valid():
             serializer.save()
+            print("save")
             self.updateSubscriptionsCount(user, True)
-            self.updateFollowerCount(subscription, True)
-            self.addToFollower(subscription, user)
+            self.updateFollowerCount(request.data.get("subscription"), True)
+            self.addToFollower(request.data.get("subscription"), user)
             response = {"message": "Subscription Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
-        subscription_exist = Subscription.objects.filter(user=user, subscription=subscription)
-        subscription_exist.delete()
-        self.updateSubscriptionsCount(user, False)
-        self.updateFollowerCount(subscription_exist, False)
-        self.deleteFromFollower(subscription_exist, user)
-        return Response(data='DELETED', status=status.HTTP_200_OK)       
-
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     #def delete(self, request:Request):
     #    user = request.data.get("user")
     #    subscription = request.data.get("subscription")
@@ -62,12 +63,14 @@ class SubscriptionView(APIView):
         else:
             user.followers_count -= 1
         user.save()
+
+        
     def addToFollower(self, user, follower):
         Follower.objects.create(user=user, follower=follower)
+
     def deleteFromFollower(self, user, follower):
-        follower = Follower.objects.filter(user_id=user, follower=follower)
+        follower = Follower.objects.filter(user=user, follower=follower)
         follower.delete()
-        
 
 
 
