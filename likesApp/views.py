@@ -14,25 +14,29 @@ class LikesView(APIView):
             'user': request.data.get('user'),
             'post': request.data.get('post')
         }
+        like = Like.objects.filter(user=data['user'], post=data['post'])
         serializer = self.serializer_class(data=data)
         print(serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
             self.updateCount(data['post'], True)
             return Response({'message': 'CREATED', 'data': serializer.data}, status=status.HTTP_201_CREATED)
+        else :
+            like.delete()
+            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
         return Response({'message': 'Like already exists'}, status=status.HTTP_409_CONFLICT)
         
-    def delete(self, request):
-        data = {
-            'user': request.data.get('user'),
-            'post': request.data.get('post')
-        }
-        like = Like.objects.filter(user=data['user'], post=data['post'])
-        if not like.exists():
-            return Response({'message': 'Like does not exist'}, status=status.HTTP_409_CONFLICT)
-        like.delete()
-        self.updateCount(data['post'], False)
-        return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+    #def delete(self, request):
+    #    data = {
+    #        'user': request.data.get('user'),
+    #        'post': request.data.get('post')
+    #    }
+    #    like = Like.objects.filter(user=data['user'], post=data['post'])
+    #    if not like.exists():
+    #        return Response({'message': 'Like does not exist'}, status=status.HTTP_409_CONFLICT)
+    #    like.delete()
+    #    self.updateCount(data['post'], False)
+    #    return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
     def updateCount(self, post, increment):
         post = Post.objects.get(id=post)
         if increment:
@@ -59,3 +63,7 @@ class LikesOnPostView(APIView):
             like_list.append(like)
         serializer = LikeUserSerializer(likes, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+class CSRFTokenView(APIView):
+    def get(self, request):
+        return Response(data={'csrfToken': request.META['CSRF_COOKIE']}, status=status.HTTP_200_OK)
