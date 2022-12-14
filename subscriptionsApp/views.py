@@ -31,17 +31,16 @@ class SubscriptionView(APIView):
             response = {"message": "Subscription Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class DeleteSubscriptionView(APIView):
-    def post(self, request:Request):
-        user = request.data.get("user")
-        subscription = request.data.get("subscription")
+        
+    def delete(self, request:Request, user, subscription):
         subscription_exist = Subscription.objects.filter(user=user, subscription=subscription)
         subscription_exist.delete()
         updateSubscriptionsCount(user, False)
         updateFollowerCount(subscription, False)
         deleteFromFollower(subscription, user)
         return Response(data='DELETED', status=status.HTTP_200_OK)
+    
+class ExistSubscriptionView(APIView):
     def get(self, request, user, subscription):
         if Subscription.objects.filter(user=user, subscription=subscription).exists():
             return Response(data= "True", status=status.HTTP_200_OK)
