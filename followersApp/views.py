@@ -19,8 +19,8 @@ class FollowerView(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        user = request.data.get("subscription")
-        follower = request.data.get("user")
+        user = request.data.get("user")
+        follower = request.data.get("follower")
         data = request.data
         serializer = self.serializer_class(data=data)
         follower = Follower.objects.filter(user=user, follower=follower)
