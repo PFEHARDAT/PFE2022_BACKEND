@@ -38,6 +38,12 @@ class RetweetAPIView(APIView):
         retweet_exist.delete()
         return Response(data='DELETED', status=status.HTTP_200_OK)
 
+    def get(self, request:Request):
+        user = request.data.get("user")
+        post = request.data.get("post")
+        if Retweet.objects.filter(user=user, post=post).exists():
+            return Response(data= "True", status=status.HTTP_200_OK)
+        return Response(data= "False", status=status.HTTP_200_OK)
 
 
     #def delete(self , request:Request):

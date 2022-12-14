@@ -8,6 +8,5 @@ urlpatterns = [
     path("all/<int:user>", views.SubscriptionView.as_view(), name="subscription_all"),
     path("create/", views.SubscriptionView.as_view(), name="subscription_create"),
     path("delete/", views.DeleteSubscriptionView.as_view(), name="subscription_delete")
-
 ]
 
