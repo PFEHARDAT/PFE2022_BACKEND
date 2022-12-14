@@ -25,12 +25,14 @@ class SubscriptionView(APIView):
         subscription = Subscription.objects.filter(user=user, subscription=request.data.get("subscription"))
         serializer = self.serializer_class(data=data)
         if subscription.exists():
+            print("delete")
             subscription.delete()
             self.updateSubscriptionsCount(user, False)
             self.updateFollowerCount(subscription, False)
             self.deleteFromFollower(subscription, user)
         elif serializer.is_valid():
             serializer.save()
+            print("save")
             self.updateSubscriptionsCount(user, True)
             self.updateFollowerCount(request.data.get("subscription"), True)
             self.addToFollower(request.data.get("subscription"), user)
@@ -61,8 +63,11 @@ class SubscriptionView(APIView):
         else:
             user.followers_count -= 1
         user.save()
+
+        
     def addToFollower(self, user, follower):
         Follower.objects.create(user=user, follower=follower)
+
     def deleteFromFollower(self, user, follower):
         follower = Follower.objects.filter(user=user, follower=follower)
         follower.delete()

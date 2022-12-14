@@ -18,7 +18,7 @@ class FollowerView(APIView):
         serializer = FollowerToUserSerializer(followers, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request:Request):
+    def post(self, request):
         user = request.data.get("user")
         follower = request.data.get("follower")
         data = request.data
