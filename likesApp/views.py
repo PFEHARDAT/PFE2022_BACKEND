@@ -4,27 +4,37 @@ from .models import Like
 from rest_framework import status
 from usersApp.models import User
 from postsApp.models import Post
+from .serializers import LikePostSerializer, LikeUserSerializer, LikeSerializer
 
 # Create your views here.
 class LikesView(APIView):
+    serializer_class = LikeSerializer
     def post(self, request):
         data = {
-            'user_id': request.data.get('user_id'),
-            'post_id': request.data.get('post_id')
+            'user': request.data.get('user'),
+            'post': request.data.get('post')
         }
-        user = User.objects.get(id=data['user_id'])
-        post = Post.objects.get(id=data['post_id'])
-        like = Like.objects.filter(user=user, post=post)
-        if like.exists():
-            like.delete()
-            self.updateCount(post, False)
-            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
-        else:
-            Like.objects.create(user=user, post=post)
-            self.updateCount(post, True)
-            return Response({'message': 'CREATED'}, status=status.HTTP_201_CREATED)
-
+        serializer = self.serializer_class(data=data)
+        print(serializer.is_valid())
+        if serializer.is_valid():
+            serializer.save()
+            self.updateCount(data['post'], True)
+            return Response({'message': 'CREATED', 'data': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Like already exists'}, status=status.HTTP_409_CONFLICT)
+        
+    def delete(self, request):
+        data = {
+            'user': request.data.get('user'),
+            'post': request.data.get('post')
+        }
+        like = Like.objects.filter(user=data['user'], post=data['post'])
+        if not like.exists():
+            return Response({'message': 'Like does not exist'}, status=status.HTTP_409_CONFLICT)
+        like.delete()
+        self.updateCount(data['post'], False)
+        return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
     def updateCount(self, post, increment):
+        post = Post.objects.get(id=post)
         if increment:
             post.like_count += 1
         else:
@@ -36,8 +46,9 @@ class LikedPostView(APIView):
         likes = Like.objects.filter(user=user)
         like_list = []
         for like in likes:
-            like_list.append(like.post.id)
-        return Response({'like_list': like_list}, status=status.HTTP_200_OK)
+            like_list.append(like)
+        serializer = LikePostSerializer(likes, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class LikesOnPostView(APIView):
     def get(self, request, post_id):
@@ -45,5 +56,6 @@ class LikesOnPostView(APIView):
         likes = Like.objects.filter(post=post)
         like_list = []
         for like in likes:
-            like_list.append(like.user.id)
-        return Response({'like_list': like_list}, status=status.HTTP_200_OK)
+            like_list.append(like)
+        serializer = LikeUserSerializer(likes, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
