@@ -28,9 +28,7 @@ class LikesView(APIView):
     
         return Response({'message': 'Like already exists'}, status=status.HTTP_409_CONFLICT)
 
-    def get(self, request):
-        user = request.data.get("user")
-        post = request.data.get("post")
+    def get(self, request, user, post):
         if Like.objects.filter(user=user, post=post).exists():
             return Response(data= "True", status=status.HTTP_200_OK)
         return Response(data= "False", status=status.HTTP_200_OK)
