@@ -31,19 +31,13 @@ class RetweetAPIView(APIView):
             main_post.save()
             response = {"message": "Retweet Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def delete(self , request:Request):
-        user = request.data.get("user")
-        post = request.data.get("post")
         retweet_exist = Retweet.objects.filter(user=user, post=post)
         main_post = Post.objects.get(id=post)
         main_post.retweet_count -= 1
         main_post.save()
         retweet_exist.delete()
         return Response(data='DELETED', status=status.HTTP_200_OK)
-
+       
 class RetweetListAPIView(APIView):
     def get(self, request:Request, user):
         retweets = Retweet.objects.all().filter(user=user)

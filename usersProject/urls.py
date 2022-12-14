@@ -32,6 +32,4 @@ urlpatterns = [
     path('posts/', include(postsUrls)),
     path('likes/', include(likesUrls)),
     path('retweets/', include(retweetUrls)),
-
-
 ]
