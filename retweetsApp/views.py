@@ -44,6 +44,7 @@ class RetweetAPIView(APIView):
         retweet_exist.delete()
         return Response(data='DELETED', status=status.HTTP_200_OK)
 
+class RetweetListAPIView(APIView):
     def get(self, request:Request, user):
         retweets = Retweet.objects.all().filter(user=user)
         serializer = RetweetPostSerializer(retweets, many=True)
