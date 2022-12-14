@@ -16,7 +16,7 @@ class PostListAPIView(APIView):
         '''
         List all the post items
         '''
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by('-publication_date')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
@@ -72,7 +72,7 @@ class PostDetailsAPIView(APIView):
 
 class PostByUserAPIView(APIView):
     def get(self,request, user_id):
-        posts = Post.objects.filter(user = user_id)
+        posts = Post.objects.filter(user = user_id).order_by('-publication_date')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
@@ -80,7 +80,7 @@ class CommentsListAPIView(APIView):
     
     #List all comments of a post
     def get(self, request, post_id):
-        comments = Post.objects.filter(response_to_post=post_id)
+        comments = Post.objects.filter(response_to_post=post_id).order_by('-publication_date')
         serializer = PostSerializer(comments, many=True)
         return Response(serializer.data)
 
@@ -126,7 +126,7 @@ class PostFromSubscriptionAPIView(APIView):
 
         # Return all posts created by people, user (id=user_id) is following
         # comments are excluded
-        posts = Post.objects.filter(user__in=set_sub).exclude(is_comment=True)
+        posts = Post.objects.filter(user__in=set_sub).exclude(is_comment=True).order_by('-publication_date')
         serializer = PostSerializer(posts, many=True)
         
         return Response(serializer.data)
