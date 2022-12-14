@@ -34,6 +34,7 @@ class FollowerView(APIView):
             response = {"message": "Follower Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
     #def delete(self, request:Request):
     #    user = request.data.get("user")
