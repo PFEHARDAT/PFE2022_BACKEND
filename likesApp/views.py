@@ -17,13 +17,15 @@ class LikesView(APIView):
         like = Like.objects.filter(user=data['user'], post=data['post'])
         serializer = self.serializer_class(data=data)
         print(serializer.is_valid())
-        if serializer.is_valid():
+        if like.exists():
+            like.delete()
+            self.updateCount(data['post'], False)
+            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+        elif serializer.is_valid():
             serializer.save()
             self.updateCount(data['post'], True)
             return Response({'message': 'CREATED', 'data': serializer.data}, status=status.HTTP_201_CREATED)
-        else :
-            like.delete()
-            return Response({'message': 'DELETED'}, status=status.HTTP_200_OK)
+    
         return Response({'message': 'Like already exists'}, status=status.HTTP_409_CONFLICT)
         
     #def delete(self, request):

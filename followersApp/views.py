@@ -23,21 +23,25 @@ class FollowerView(APIView):
         follower = request.data.get("follower")
         data = request.data
         serializer = self.serializer_class(data=data)
-        if serializer.is_valid():
+        follower = Follower.objects.filter(user=user, follower=follower)
+        if follower.exists():
+            follower.delete()
+            self.updateFollowerCount(user, False)
+            return Response(data='DELETED', status=status.HTTP_200_OK)
+        elif serializer.is_valid():
             serializer.save()
             self.updateFollowerCount(user, True)
             response = {"message": "Follower Created Successfully", "data": serializer.data}
             return Response(data=response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     
-    def delete(self, request:Request):
-        user = request.data.get("user")
-        follower = request.data.get("follower")
-        follower_exist = Follower.objects.filter(user=user, follower=follower)
-        follower_exist.delete()
-        self.updateFollowerCount(user, False)
-        return Response(data='DELETED', status=status.HTTP_200_OK)
+    #def delete(self, request:Request):
+    #    user = request.data.get("user")
+    #    follower = request.data.get("follower")
+    #    follower_exist = Follower.objects.filter(user=user, follower=follower)
+    #    follower_exist.delete()
+    #    self.updateFollowerCount(user, False)
+    #    return Response(data='DELETED', status=status.HTTP_200_OK)
     
     def updateFollowerCount(self, user, increment):
         user = User.objects.get(id=user)
