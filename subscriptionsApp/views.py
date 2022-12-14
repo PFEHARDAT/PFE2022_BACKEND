@@ -42,9 +42,7 @@ class DeleteSubscriptionView(APIView):
         updateFollowerCount(subscription, False)
         deleteFromFollower(subscription, user)
         return Response(data='DELETED', status=status.HTTP_200_OK)
-    def get(self, request):
-        user = request.data.get("user")
-        subscription = request.data.get("subscription")
+    def get(self, request, user, subscription):
         if Subscription.objects.filter(user=user, subscription=subscription).exists():
             return Response(data= "True", status=status.HTTP_200_OK)
         return Response(data= "False", status=status.HTTP_200_OK)
