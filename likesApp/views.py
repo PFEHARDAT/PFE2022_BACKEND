@@ -45,7 +45,10 @@ class LikedPostView(APIView):
     def get(self, request, user_id):
         user = User.objects.get(id=user_id)
         likes = Like.objects.filter(user=user)
-        posts = Post.objects.filter(id=likes[0].post.id)
+        posts = []
+        for like in likes:
+            posts.append(like.post)
+        print(posts)
         completeData = transformPostData(posts, user_id)
         serializer = LikePostSerializer(completeData, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

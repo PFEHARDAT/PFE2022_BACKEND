@@ -50,7 +50,9 @@ class RetweetAPIView(APIView):
 class RetweetListAPIView(APIView):
     def get(self, request:Request, user):
         retweets = Retweet.objects.all().filter(user=user)
-        posts = Post.objects.filter(id=retweets[0].post.id)
+        posts = []
+        for retweet in retweets:
+            posts.append(retweet.post)
         completeData = transformPostData(posts, user)
         serializer = RetweetPostSerializer(completeData, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
