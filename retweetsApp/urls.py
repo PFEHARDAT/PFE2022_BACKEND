@@ -5,5 +5,4 @@ from .views import RetweetAPIView, RetweetListAPIView, RetweetExistAPIView
 urlpatterns = [
     path("", RetweetAPIView.as_view(), name="retweet"),
     path("/all/<int:user>", RetweetListAPIView.as_view(), name="retweet_all"),
-    path("/exist", RetweetExistAPIView.as_view(), name="retweet_exist")
 ]

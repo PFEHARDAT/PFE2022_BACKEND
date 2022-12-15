@@ -53,12 +53,4 @@ class RetweetListAPIView(APIView):
         serializer = RetweetPostSerializer(retweets, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-class RetweetExistAPIView(APIView):
-    def get(self, request:Request):
-        user = request.query_params.get("user")
-        post = request.query_params.get("post")
-        if Retweet.objects.filter(user_id=user, post_id=post).exists():
-            return Response(data="True", status=status.HTTP_200_OK)
-        return Response(data="False", status=status.HTTP_200_OK)
-
 

@@ -48,21 +48,3 @@ class LikedPostView(APIView):
             like_list.append(like)
         serializer = LikePostSerializer(likes, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-class LikesOnPostView(APIView):
-    def get(self, request, post_id):
-        post = Post.objects.get(id=post_id)
-        likes = Like.objects.filter(post=post)
-        like_list = []
-        for like in likes:
-            like_list.append(like)
-        serializer = LikeUserSerializer(likes, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-class LikeExistView(APIView):
-    def get(self, request):
-        user = request.query_params.get('user')
-        post = request.query_params.get('post')
-        if Like.objects.filter(user=user, post=post).exists():
-            return Response(data= "True", status=status.HTTP_200_OK)
-        return Response(data= "False", status=status.HTTP_200_OK)
