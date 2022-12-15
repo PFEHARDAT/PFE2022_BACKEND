@@ -20,13 +20,6 @@ class LikesView(APIView):
             self.updateCount(data['post'], True)
             return Response({'message': 'CREATED', 'data': serializer.data}, status=status.HTTP_201_CREATED)
         return Response({'message': 'Like already exists'}, status=status.HTTP_409_CONFLICT)
-
-    def get(self, request):
-        user = request.query_params.get('user')
-        post = request.query_params.get('post')
-        if Like.objects.filter(user=user, post=post).exists():
-            return Response(data= "True", status=status.HTTP_200_OK)
-        return Response(data= "False", status=status.HTTP_200_OK)
         
     def delete(self, request):
         user = request.query_params.get('user')
@@ -65,3 +58,11 @@ class LikesOnPostView(APIView):
             like_list.append(like)
         serializer = LikeUserSerializer(likes, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+class LikeExistView(APIView):
+    def get(self, request):
+        user = request.query_params.get('user')
+        post = request.query_params.get('post')
+        if Like.objects.filter(user=user, post=post).exists():
+            return Response(data= "True", status=status.HTTP_200_OK)
+        return Response(data= "False", status=status.HTTP_200_OK)

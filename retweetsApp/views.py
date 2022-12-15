@@ -59,6 +59,6 @@ class RetweetExistAPIView(APIView):
         post = request.query_params.get("post")
         if Retweet.objects.filter(user=user, post=post).exists():
             return Response(data="True", status=status.HTTP_200_OK)
-        return Response(data= "False", status=status.HTTP_200_OK)
+        return Response(data="False", status=status.HTTP_200_OK)
 
 
