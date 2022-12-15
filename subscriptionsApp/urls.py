@@ -5,9 +5,8 @@ from . import views
 
 
 urlpatterns = [
-    path("all/<int:user>", views.SubscriptionView.as_view(), name="subscription_all"),
-    path("create/", views.SubscriptionView.as_view(), name="subscription_create"),
-    path("delete/", views.DeleteSubscriptionView.as_view(), name="subscription_delete"),
-    path("exist/<int:user>/<int:subscription>", views.DeleteSubscriptionView.as_view(), name="subscription_exist")
+    path("/all/<int:user>", views.SubscriptionView.as_view(), name="subscription_all"),
+    path("", views.SubscriptionView.as_view(), name="subscription_create"),
+    path("/exist/<int:user>/<int:subscription>", views.ExistSubscriptionView.as_view(), name="subscription_exist")
 ]
 
