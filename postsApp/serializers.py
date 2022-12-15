@@ -19,7 +19,6 @@ class PostSerializer(serializers.ModelSerializer):
 
 class PostSerializerPlus(serializers.ModelSerializer):
     post = PostSerializer()
-
     class Meta:
         model = PostPlus
         fields = [

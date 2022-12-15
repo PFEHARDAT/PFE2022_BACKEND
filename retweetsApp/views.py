@@ -6,7 +6,7 @@ from rest_framework import status
 from .models import Retweet
 from .models import Post 
 from .serializers import RetweetSerializer, RetweetPostSerializer
-
+from postsApp.views import transformPostData
 
 import datetime
 
@@ -50,7 +50,9 @@ class RetweetAPIView(APIView):
 class RetweetListAPIView(APIView):
     def get(self, request:Request, user):
         retweets = Retweet.objects.all().filter(user=user)
-        serializer = RetweetPostSerializer(retweets, many=True)
+        posts = Post.objects.filter(id=retweets[0].post.id)
+        completeData = transformPostData(posts, user)
+        serializer = RetweetPostSerializer(completeData, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

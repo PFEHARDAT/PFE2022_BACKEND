@@ -1,20 +1,6 @@
 from rest_framework import serializers
 from .models import Like
-from postsApp.serializers import PostSerializer
-from usersApp.serializers import UserSerializer
-
-
-class LikePostSerializer(serializers.ModelSerializer):
-    post = PostSerializer()
-    class Meta:
-        model = Like
-        fields = ('id', 'user', 'post', 'created_at')
-
-class LikeUserSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    class Meta:
-        model = Like
-        fields = ('id', 'post', 'user', 'created_at')
+from postsApp.serializers import PostSerializerPlus
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,3 +10,6 @@ class LikeSerializer(serializers.ModelSerializer):
         ret = super().create(validated_data)
         ret.save()
         return ret
+
+class LikePostSerializer(PostSerializerPlus):
+    super(PostSerializerPlus)

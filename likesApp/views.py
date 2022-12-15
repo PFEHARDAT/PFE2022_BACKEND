@@ -4,7 +4,9 @@ from .models import Like
 from rest_framework import status
 from usersApp.models import User
 from postsApp.models import Post
-from .serializers import LikePostSerializer, LikeUserSerializer, LikeSerializer
+from .serializers import LikeSerializer, LikePostSerializer
+from postsApp.views import transformPostData
+
 
 # Create your views here.
 class LikesView(APIView):
@@ -43,8 +45,7 @@ class LikedPostView(APIView):
     def get(self, request, user_id):
         user = User.objects.get(id=user_id)
         likes = Like.objects.filter(user=user)
-        like_list = []
-        for like in likes:
-            like_list.append(like)
-        serializer = LikePostSerializer(likes, many=True)
+        posts = Post.objects.filter(id=likes[0].post.id)
+        completeData = transformPostData(posts, user_id)
+        serializer = LikePostSerializer(completeData, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

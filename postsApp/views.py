@@ -75,7 +75,8 @@ class PostDetailsAPIView(APIView):
 class PostByUserAPIView(APIView):
     def get(self,request, user_id):
         posts = Post.objects.filter(user = user_id).order_by('-publication_date')
-        serializer = PostSerializer(posts, many=True)
+        completeData = transformPostData(posts, user_id)
+        serializer = PostSerializerPlus(completeData, many=True)
         return Response(serializer.data)
 
 class CommentsListAPIView(APIView):
@@ -85,19 +86,7 @@ class CommentsListAPIView(APIView):
         post_id = request.query_params.get('post')
         user_id = request.query_params.get('user')
         comments = Post.objects.filter(response_to_post=post_id).order_by('-publication_date')
-        completeData = []
-        for comment in comments:
-            newData = PostPlus()
-            newData.__setattr__('post', comment)
-            if (Like.objects.filter(post=comment.id, user=user_id).exists()):
-                newData.__setattr__('liked', True)
-            else:
-                newData.__setattr__('liked', False)
-            if (Retweet.objects.filter(post=comment.id, user=user_id).exists()):
-                newData.__setattr__('retweeted', True)
-            else:
-                newData.__setattr__('retweeted', False)
-            completeData.append(newData)
+        completeData = transformPostData(comments, user_id)
         serializer = PostSerializerPlus(completeData, many=True)
         return Response(serializer.data)
 
@@ -144,18 +133,22 @@ class PostFromSubscriptionAPIView(APIView):
         # Return all posts created by people, user (id=user_id) is following
         # comments are excluded
         posts = Post.objects.filter(user__in=set_sub).exclude(is_comment=True).order_by('-publication_date')
-        completeData = []
-        for post in posts:
-            newData = PostPlus()
-            newData.__setattr__('post', post)
-            if (Like.objects.filter(post=post.id, user=user_id).exists()):
-                newData.__setattr__('liked', True)
-            else:
-                newData.__setattr__('liked', False)
-            if (Retweet.objects.filter(post=post.id, user=user_id).exists()):
-                newData.__setattr__('retweeted', True)
-            else:
-                newData.__setattr__('retweeted', False)
-            completeData.append(newData)
+        completeData = transformPostData(posts, user_id)
         serializer = PostSerializerPlus(completeData, many=True)
         return Response(serializer.data)
+
+def transformPostData(posts, user_id):
+    completeData = []
+    for post in posts:
+        newData = PostPlus()
+        newData.__setattr__('post', post)
+        if (Like.objects.filter(post=post.id, user=user_id).exists()):
+            newData.__setattr__('liked', True)
+        else:
+            newData.__setattr__('liked', False)
+        if (Retweet.objects.filter(post=post.id, user=user_id).exists()):
+            newData.__setattr__('retweeted', True)
+        else:
+            newData.__setattr__('retweeted', False)
+        completeData.append(newData)
+    return completeData

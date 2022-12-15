@@ -1,15 +1,7 @@
 from rest_framework import serializers
 from .models import Retweet
 from .models import Post 
-from postsApp.serializers import PostSerializer
-
-
-
-class RetweetPostSerializer(serializers.ModelSerializer):
-    post = PostSerializer()
-    class Meta:
-        model = Retweet
-        fields = ('id', 'user', 'post', 'retweet_date')
+from postsApp.serializers import PostSerializerPlus
 
 class RetweetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,3 +13,6 @@ class RetweetSerializer(serializers.ModelSerializer):
         ret = super().create(validated_data)
         ret.save()
         return ret
+
+class RetweetPostSerializer(PostSerializerPlus):
+    super(PostSerializerPlus)
