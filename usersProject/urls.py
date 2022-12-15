@@ -28,8 +28,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('users/', include(userUrls)),
     path('followers/', include(followerUrls)),
-    path('subscriptions/', include(subscriptionUrls)),
+    path('subscriptions', include(subscriptionUrls)),
     path('posts/', include(postsUrls)),
-    path('likes/', include(likesUrls)),
+    path('likes', include(likesUrls)),
     path('retweets/', include(retweetUrls)),
 ]
