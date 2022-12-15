@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Post
+from .models import Post, PostPlus
 from usersApp.models import User
+from likesApp.models import Like
+from retweetsApp.models import Retweet
 from subscriptionsApp.models import Subscription
-from .serializers import PostSerializer
+from .serializers import PostSerializer, PostSerializerPlus
 import datetime
 # Create your views here.
 
@@ -119,7 +121,7 @@ class CommentsListAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostFromSubscriptionAPIView(APIView):
-    def get(self,request,user_id):
+    def get(self,request, user_id):
         
         subscriptions = Subscription.objects.filter(user=user_id)
         set_sub = {s.subscription.id for s in subscriptions}
@@ -127,6 +129,18 @@ class PostFromSubscriptionAPIView(APIView):
         # Return all posts created by people, user (id=user_id) is following
         # comments are excluded
         posts = Post.objects.filter(user__in=set_sub).exclude(is_comment=True).order_by('-publication_date')
-        serializer = PostSerializer(posts, many=True)
-        
+        completeData = []
+        for post in posts:
+            newData = PostPlus()
+            newData.__setattr__('post', Post.objects.get(pk=post.id))
+            if (Like.objects.filter(post=post.id, user=user_id).exists()):
+                newData.__setattr__('liked', True)
+            else:
+                newData.__setattr__('liked', False)
+            if (Retweet.objects.filter(post=post.id, user=user_id).exists()):
+                newData.__setattr__('retweeted', True)
+            else:
+                newData.__setattr__('retweeted', False)
+            completeData.append(newData)
+        serializer = PostSerializerPlus(completeData, many=True)
         return Response(serializer.data)

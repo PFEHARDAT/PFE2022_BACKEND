@@ -16,3 +16,10 @@ class Post(models.Model):
     def __str__(self):
         return self.content
 
+class PostPlus(models.Model):
+    post = models.ForeignKey(Post, on_delete = models.CASCADE)
+    liked = models.BooleanField(default=False)
+    retweeted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.post.content
