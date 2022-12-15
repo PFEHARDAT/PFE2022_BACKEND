@@ -5,26 +5,34 @@ from rest_framework import status
 from .models import Post
 from usersApp.models import User
 from subscriptionsApp.models import Subscription
-from .serializers import PostSerializer
+from .serializers import PostSerializer,NewPostSerializer
 import datetime
+from drf_yasg.utils import swagger_auto_schema
 # Create your views here.
 
 class PostListAPIView(APIView):
 
     #List all Post
+    @swagger_auto_schema(
+        operation_summary="List all the post items",
+        operation_description="Return a list of all the post items"
+    )
     def get(self,request):
-        '''
-        List all the post items
-        '''
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
     #Create one Post
+    @swagger_auto_schema(
+        request_body=NewPostSerializer,
+        operation_summary="Create a new post",
+        operation_description="Create a new post with given post data.",
+        responses={
+            status.HTTP_201_CREATED : PostSerializer,
+            status.HTTP_400_BAD_REQUEST : "Bad Request : Error Message is returned"}
+    )
     def post(self, request):
-        '''
-        Create the post with given post data
-        '''
+
         user_author = User.objects.get(pk=request.data.get('user'))
         data = {
             'user': request.data.get('user'), 

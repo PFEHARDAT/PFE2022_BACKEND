@@ -16,3 +16,11 @@ class PostSerializer(serializers.ModelSerializer):
             "response_to_post",
             "author_pseudo"
             ]
+
+class NewPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "user",
+            "content"
+            ]
