@@ -81,9 +81,7 @@ class UserSearchAPIView(APIView):
     def get(self, request:Request):
         loggedUser = User.objects.filter(pk=request.query_params.get("user"))
         search = request.query_params.get("search")
-        print(search)
         users = User.objects.filter(username__icontains=search)
-        print(users)
         completeData =[]
         for user in users:
             newData = UserFollowed()
