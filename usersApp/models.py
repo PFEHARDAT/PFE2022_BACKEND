@@ -42,3 +42,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+class UserFollowed(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followed")
+    followed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.email

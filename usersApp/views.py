@@ -5,8 +5,9 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework import generics, status
-from .serializers import SignUpSerializer, UserSerializer
-from .models import User
+from .serializers import SignUpSerializer, UserSerializer, UserFollowedSerializer
+from .models import User, UserFollowed
+from followersApp.models import Follower
 
 # Create your views here.
 class SignUpView(generics.GenericAPIView):
@@ -77,8 +78,22 @@ class UserDetailAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
         
 class UserSearchAPIView(APIView):
-    def get(self, request:Request, username):
-        users = User.objects.filter(username__icontains=username)
-        serializer = UserSerializer(users, many=True)
+    def get(self, request:Request):
+        loggedUser = User.objects.filter(pk=request.query_params.get("user"))
+        search = request.query_params.get("search")
+        print(search)
+        users = User.objects.filter(username__icontains=search)
+        print(users)
+        completeData =[]
+        for user in users:
+            newData = UserFollowed()
+            if (Follower.objects.filter(follower=loggedUser[0], user=user).exists()):
+                newData.__setattr__("user", user)
+                newData.__setattr__("followed", True)
+            else:
+                newData.__setattr__("user", user)
+                newData.__setattr__("followed", False)
+            completeData.append(newData)
+        serializer = UserFollowedSerializer(completeData, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK) 
     
