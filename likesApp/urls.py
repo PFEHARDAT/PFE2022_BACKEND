@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LikesView, LikedPostView, LikesOnPostView, LikeExistView
+from .views import LikesView, LikedPostView
 
 
 urlpatterns = [

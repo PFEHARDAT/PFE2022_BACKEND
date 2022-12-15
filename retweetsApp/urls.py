@@ -1,6 +1,6 @@
 # /postsApp/urls.py : API urls.py
 from django.urls import path
-from .views import RetweetAPIView, RetweetListAPIView, RetweetExistAPIView
+from .views import RetweetAPIView, RetweetListAPIView
 
 urlpatterns = [
     path("", RetweetAPIView.as_view(), name="retweet"),
