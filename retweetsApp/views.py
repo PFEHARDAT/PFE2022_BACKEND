@@ -31,11 +31,6 @@ class RetweetAPIView(APIView):
             return Response(data=response, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request:Request, user, post):
-        if Retweet.objects.filter(user=user, post=post).exists():
-            return Response(data= "True", status=status.HTTP_200_OK)
-        return Response(data= "False", status=status.HTTP_200_OK)
-
     def delete(self, request:Request):
         user = request.query_params.get("user")
         post = request.query_params.get("post")
@@ -57,5 +52,13 @@ class RetweetListAPIView(APIView):
         retweets = Retweet.objects.all().filter(user=user)
         serializer = RetweetPostSerializer(retweets, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+class RetweetExistAPIView(APIView):
+    def get(self, request:Request):
+        user = request.query_params.get("user")
+        post = request.query_params.get("post")
+        if Retweet.objects.filter(user=user, post=post).exists():
+            return Response(data="True", status=status.HTTP_200_OK)
+        return Response(data= "False", status=status.HTTP_200_OK)
 
 
