@@ -132,7 +132,7 @@ class PostFromSubscriptionAPIView(APIView):
         completeData = []
         for post in posts:
             newData = PostPlus()
-            newData.__setattr__('post', Post.objects.get(pk=post.id))
+            newData.__setattr__('post', post)
             if (Like.objects.filter(post=post.id, user=user_id).exists()):
                 newData.__setattr__('liked', True)
             else:
