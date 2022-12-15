@@ -81,9 +81,24 @@ class PostByUserAPIView(APIView):
 class CommentsListAPIView(APIView):
     
     #List all comments of a post
-    def get(self, request, post_id):
+    def get(self, request):
+        post_id = request.query_params.get('post')
+        user_id = request.query_params.get('user')
         comments = Post.objects.filter(response_to_post=post_id).order_by('-publication_date')
-        serializer = PostSerializer(comments, many=True)
+        completeData = []
+        for comment in comments:
+            newData = PostPlus()
+            newData.__setattr__('post', comment)
+            if (Like.objects.filter(post=comment.id, user=user_id).exists()):
+                newData.__setattr__('liked', True)
+            else:
+                newData.__setattr__('liked', False)
+            if (Retweet.objects.filter(post=comment.id, user=user_id).exists()):
+                newData.__setattr__('retweeted', True)
+            else:
+                newData.__setattr__('retweeted', False)
+            completeData.append(newData)
+        serializer = PostSerializerPlus(completeData, many=True)
         return Response(serializer.data)
 
     def post(self, request, post_id):
